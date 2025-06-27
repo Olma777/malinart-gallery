@@ -1,7 +1,11 @@
 {
   "name": "malinart-gallery",
   "version": "1.0.0",
+  "description": "Art Gallery Website",
   "scripts": {
-    "start": "npx serve -s . -l $PORT"
+    "start": "npx serve@latest -s . -l $PORT"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
