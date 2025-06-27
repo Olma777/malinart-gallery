@@ -65,6 +65,33 @@
             color: #666;
         }
 
+        /* About Section */
+        .about-section {
+            background: white;
+            padding: 80px 0;
+            margin-bottom: 60px;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .about-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #555;
+            white-space: pre-line;
+        }
+
         /* Category Filter */
         .filter-container {
             padding: 40px 0 20px;
@@ -117,7 +144,7 @@
 
         .artwork img {
             width: 100%;
-            height: 300px;
+            height: 400px;
             object-fit: cover;
             display: block;
         }
@@ -127,7 +154,7 @@
         }
 
         .artwork-title {
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 5px;
             font-weight: 400;
         }
@@ -223,6 +250,7 @@
             margin-top: 20px;
             line-height: 1.8;
             color: #555;
+            white-space: pre-line;
         }
 
         /* Contact Section */
@@ -395,22 +423,39 @@
         <nav class="container">
             <div class="logo">MALINART</div>
             <ul class="nav-links">
-                <li><a href="#gallery" class="active">Галерея</a></li>
                 <li><a href="#about">Про художницю</a></li>
+                <li><a href="#gallery" class="active">Галерея</a></li>
                 <li><a href="#contact">Контакти</a></li>
             </ul>
         </nav>
     </header>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <h2>Про художницю</h2>
+                <div class="about-text">Мене звати Даниїла, у мистецтві — MalinArt.
+Я створюю картини, що народжуються з тиші між думками, з шепоту незримого, з відлуння снів, які не мають початку й кінця. Це не просто зображення — це стани, що приходять крізь мене, як світло крізь вітраж.
+
+Я малюю для тих, хто вміє бачити серцем. Для тих, хто шукає не сюжет — а відчуття.
+Моє мистецтво — це не втеча від реальності, а дотик до глибшої правди, що ховається за її завісою.
+
+У цій галереї ви не знайдете галасу, акцій чи реклами.
+Тут — лише фарби, тиша й душа.
+Ласкаво прошу до простору, де образи говорять замість слів.</div>
+            </div>
+        </div>
+    </section>
 
     <!-- Filter Section -->
     <div class="container">
         <div class="filter-container">
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="all">Всі роботи</button>
-                <button class="filter-btn" data-filter="oil">Олійний живопис</button>
-                <button class="filter-btn" data-filter="watercolor">Акварель</button>
-                <button class="filter-btn" data-filter="graphics">Графіка</button>
-                <button class="filter-btn" data-filter="mixed">Змішана техніка</button>
+                <button class="filter-btn" data-filter="interior">Інтерʼєрні картини</button>
+                <button class="filter-btn" data-filter="flowers">Квіти</button>
+                <button class="filter-btn" data-filter="abstract">Абстракція</button>
             </div>
         </div>
 
@@ -481,10 +526,9 @@
                     <div class="form-group">
                         <label>Категорія</label>
                         <select id="artworkCategory">
-                            <option value="oil">Олійний живопис</option>
-                            <option value="watercolor">Акварель</option>
-                            <option value="graphics">Графіка</option>
-                            <option value="mixed">Змішана техніка</option>
+                            <option value="interior">Інтерʼєрні картини</option>
+                            <option value="flowers">Квіти</option>
+                            <option value="abstract">Абстракція</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -497,7 +541,7 @@
                     </div>
                     <div class="form-group">
                         <label>Рік</label>
-                        <input type="number" id="artworkYear" value="2024">
+                        <input type="number" id="artworkYear" value="2025">
                     </div>
                     <div class="form-group">
                         <label>Статус</label>
@@ -521,13 +565,12 @@
     <button class="admin-toggle" onclick="toggleAdmin()">⚙</button>
 
     <script>
-        // Sample data - in real application this would come from a database
-        // Sample data - in real application this would come from a database
-let artworks = [
-    {
-        id: 1,
-        title: "Жінка серед калл",
-        description: "Ця картина — про жіночність, що мовчить голосніше за слова.
+        // Artwork data
+        let artworks = [
+            {
+                id: 1,
+                title: "Жінка серед калл",
+                description: `Ця картина — про жіночність, що мовчить голосніше за слова.
 Калли — квіти чистоти, смерті й відродження — здіймаються, ніби білі хмари, що оберігають спину героїні.
 Її поза — вразлива й сильна водночас, як молитва, сказана про себе.
 
@@ -537,48 +580,15 @@ let artworks = [
 
 Це не просто натюрморт.
 Це стан.
-Це жінка, що повернулася до світу спиною, щоб повернутись до себе обличчям.",
-        category: "Акріл",
-        technique: "Олія на полотні",
-        size: "60x80 см",
-        year: 2025,
-        status: "available",
-        image: "https://i.imgur.com/aoxfNgq.jpg"
-    },
-    {
-        id: 2,
-        title: "Квітковий натюрморт",
-        description: "Яскраві польові квіти в керамічній вазі",
-        category: "watercolor",
-        technique: "Акварель на папері",
-        size: "40x50 см",
-        year: 2024,
-        status: "sold",
-        image: "https://images.unsplash.com/photo-1584448141569-69f342da535c?w=800&h=600&fit=crop"
-    },
-    {
-        id: 3,
-        title: "Міські рефлексії",
-        description: "Абстрактна композиція, натхненна міським життям",
-        category: "mixed",
-        technique: "Змішана техніка",
-        size: "70x70 см",
-        year: 2023,
-        status: "available",
-        image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop"
-    },
-    {
-        id: 4,
-        title: "Портрет незнайомки",
-        description: "Графічний портрет в чорно-білих тонах",
-        category: "graphics",
-        technique: "Вугілля на папері",
-        size: "50x70 см",
-        year: 2024,
-        status: "order",
-        image: "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=800&h=600&fit=crop"
-    }
-];
+Це жінка, що повернулася до світу спиною, щоб повернутись до себе обличчям.`,
+                category: "flowers",
+                technique: "Акрил на полотні",
+                size: "60x90 см",
+                year: 2025,
+                status: "available",
+                image: "https://i.imgur.com/aoxfNgq.jpg"
+            }
+        ];
 
         // Current filter
         let currentFilter = 'all';
