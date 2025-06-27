@@ -522,55 +522,63 @@
 
     <script>
         // Sample data - in real application this would come from a database
-        let artworks = [
-           let artworks = [
+        // Sample data - in real application this would come from a database
+let artworks = [
     {
         id: 1,
-        title: "Назва картини", // <- Впишите название
-        description: "Опис вашої роботи", // <- Добавьте описание
-        category: "oil", // <- Выберите: oil, watercolor, graphics, mixed
+        title: "Жінка серед калл",
+        description: "Ця картина — про жіночність, що мовчить голосніше за слова.
+Калли — квіти чистоти, смерті й відродження — здіймаються, ніби білі хмари, що оберігають спину героїні.
+Її поза — вразлива й сильна водночас, як молитва, сказана про себе.
+
+Жовтий центр кожної квітки — як іскра життя в тиші.
+Банани внизу — земне, соковите, чуттєве.
+Але вона — між ними та вищим. Вона — міст.
+
+Це не просто натюрморт.
+Це стан.
+Це жінка, що повернулася до світу спиною, щоб повернутись до себе обличчям.",
+        category: "Акріл",
         technique: "Олія на полотні",
-        size: "60x80 см", // <- Укажите размер
-        year: 2024,
-        status: "available", // <- available, sold, или order
-        image: "https://i.imgur.com/aoxfNgq.jpg" // <- Ваша ссылка
+        size: "60x80 см",
+        year: 2025,
+        status: "available",
+        image: "https://i.imgur.com/aoxfNgq.jpg"
     },
-    // Добавьте остальные картины здесь
+    {
+        id: 2,
+        title: "Квітковий натюрморт",
+        description: "Яскраві польові квіти в керамічній вазі",
+        category: "watercolor",
+        technique: "Акварель на папері",
+        size: "40x50 см",
+        year: 2024,
+        status: "sold",
+        image: "https://images.unsplash.com/photo-1584448141569-69f342da535c?w=800&h=600&fit=crop"
+    },
+    {
+        id: 3,
+        title: "Міські рефлексії",
+        description: "Абстрактна композиція, натхненна міським життям",
+        category: "mixed",
+        technique: "Змішана техніка",
+        size: "70x70 см",
+        year: 2023,
+        status: "available",
+        image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop"
+    },
+    {
+        id: 4,
+        title: "Портрет незнайомки",
+        description: "Графічний портрет в чорно-білих тонах",
+        category: "graphics",
+        technique: "Вугілля на папері",
+        size: "50x70 см",
+        year: 2024,
+        status: "order",
+        image: "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=800&h=600&fit=crop"
+    }
 ];
-            {
-                id: 2,
-                title: "Квітковий натюрморт",
-                description: "Яскраві польові квіти в керамічній вазі",
-                category: "watercolor",
-                technique: "Акварель на папері",
-                size: "40x50 см",
-                year: 2024,
-                status: "sold",
-                image: "https://images.unsplash.com/photo-1584448141569-69f342da535c?w=800&h=600&fit=crop"
-            },
-            {
-                id: 3,
-                title: "Міські рефлексії",
-                description: "Абстрактна композиція, натхненна міським життям",
-                category: "mixed",
-                technique: "Змішана техніка",
-                size: "70x70 см",
-                year: 2023,
-                status: "available",
-                image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop"
-            },
-            {
-                id: 4,
-                title: "Портрет незнайомки",
-                description: "Графічний портрет в чорно-білих тонах",
-                category: "graphics",
-                technique: "Вугілля на папері",
-                size: "50x70 см",
-                year: 2024,
-                status: "order",
-                image: "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=800&h=600&fit=crop"
-            }
-        ];
 
         // Current filter
         let currentFilter = 'all';
