@@ -1,8 +1,0 @@
-{
-  "name": "malinart-gallery",
-  "version": "1.0.0",
-  "description": "Art Gallery Website",
-  "scripts": {
-    "start": "python -m http.server 8080"
-  }
-}
