@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MalinArt Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #666;
+        }
+
+        /* Category Filter */
+        .filter-container {
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+
+        .artwork {
+            background: white;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+        }
+
+        .artwork:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .artwork img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .artwork-info {
+            padding: 20px;
+        }
+
+        .artwork-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .artwork-details {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .artwork-status {
+            font-size: 12px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-available { color: #4CAF50; }
+        .status-sold { color: #f44336; }
+        .status-order { color: #FF9800; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: #333;
+            cursor: pointer;
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .modal-image {
+            width: 100%;
+            display: block;
+        }
+
+        .modal-info {
+            padding: 30px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            font-size: 14px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-description {
+            margin-top: 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: white;
+            padding: 60px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .contact-link {
+            padding: 12px 30px;
+            border: 2px solid #333;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .contact-link:hover {
+            background: #333;
+            color: white;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            transition: right 0.3s;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .admin-panel.open {
+            right: 0;
+        }
+
+        .admin-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-close {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+        }
+
+        .admin-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-primary {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #555;
+        }
+
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .modal-content {
+                margin: 0;
+                height: 100vh;
+                max-width: 100%;
+            }
+
+            .admin-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">MALINART</div>
+            <ul class="nav-links">
+                <li><a href="#gallery" class="active">Галерея</a></li>
+                <li><a href="#about">Про художницю</a></li>
+                <li><a href="#contact">Контакти</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Filter Section -->
+    <div class="container">
+        <div class="filter-container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Всі роботи</button>
+                <button class="filter-btn" data-filter="oil">Олійний живопис</button>
+                <button class="filter-btn" data-filter="watercolor">Акварель</button>
+                <button class="filter-btn" data-filter="graphics">Графіка</button>
+                <button class="filter-btn" data-filter="mixed">Змішана техніка</button>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Зв'яжіться зі мною</h2>
+            <p>Для замовлення робіт або питань про наявні картини</p>
+            <div class="contact-links">
+                <a href="https://t.me/oksmal99" class="contact-link">Telegram</a>
+                <a href="https://instagram.com/malinart_studio" class="contact-link">Instagram</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="artworkModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <div class="modal-info">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Техніка</div>
+                        <div id="modalTechnique"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Розмір</div>
+                        <div id="modalSize"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Рік</div>
+                        <div id="modalYear"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Статус</div>
+                        <div id="modalStatus"></div>
+                    </div>
+                </div>
+                <p class="modal-description" id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>Адмін панель</h2>
+            <span class="admin-close" onclick="toggleAdmin()">&times;</span>
+        </div>
+        <div class="admin-content">
+            <div class="admin-section">
+                <h3>Додати нову роботу</h3>
+                <form id="addArtworkForm">
+                    <div class="form-group">
+                        <label>Назва</label>
+                        <input type="text" id="artworkTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Опис</label>
+                        <textarea id="artworkDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Категорія</label>
+                        <select id="artworkCategory">
+                            <option value="oil">Олійний живопис</option>
+                            <option value="watercolor">Акварель</option>
+                            <option value="graphics">Графіка</option>
+                            <option value="mixed">Змішана техніка</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Техніка</label>
+                        <input type="text" id="artworkTechnique">
+                    </div>
+                    <div class="form-group">
+                        <label>Розмір</label>
+                        <input type="text" id="artworkSize" placeholder="50x70 см">
+                    </div>
+                    <div class="form-group">
+                        <label>Рік</label>
+                        <input type="number" id="artworkYear" value="2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Статус</label>
+                        <select id="artworkStatus">
+                            <option value="available">Доступна</option>
+                            <option value="sold">Продана</option>
+                            <option value="order">На замовлення</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>URL зображення</label>
+                        <input type="url" id="artworkImage" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Додати роботу</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Toggle Button -->
+    <button class="admin-toggle" onclick="toggleAdmin()">⚙</button>
+
+    <script>
+        // Sample data - in real application this would come from a database
+        let artworks = [
+            {
+                id: 1,
+                title: "Ранкова мелодія",
+                description: "Пейзаж, що передає атмосферу раннього ранку в українському селі",
+                category: "oil",
+                technique: "Олія на полотні",
+                size: "60x80 см",
+                year: 2024,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=600&fit=crop"
+            },
+            {
+                id: 2,
+                title: "Квітковий натюрморт",
+                description: "Яскраві польові квіти в керамічній вазі",
+                category: "watercolor",
+                technique: "Акварель на папері",
+                size: "40x50 см",
+                year: 2024,
+                status: "sold",
+                image: "https://images.unsplash.com/photo-1584448141569-69f342da535c?w=800&h=600&fit=crop"
+            },
+            {
+                id: 3,
+                title: "Міські рефлексії",
+                description: "Абстрактна композиція, натхненна міським життям",
+                category: "mixed",
+                technique: "Змішана техніка",
+                size: "70x70 см",
+                year: 2023,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop"
+            },
+            {
+                id: 4,
+                title: "Портрет незнайомки",
+                description: "Графічний портрет в чорно-білих тонах",
+                category: "graphics",
+                technique: "Вугілля на папері",
+                size: "50x70 см",
+                year: 2024,
+                status: "order",
+                image: "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=800&h=600&fit=crop"
+            }
+        ];
+
+        // Current filter
+        let currentFilter = 'all';
+
+        // Render gallery
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            const filteredArtworks = currentFilter === 'all' 
+                ? artworks 
+                : artworks.filter(art => art.category === currentFilter);
+
+            filteredArtworks.forEach(artwork => {
+                const artworkEl = document.createElement('div');
+                artworkEl.className = 'artwork';
+                artworkEl.onclick = () => openModal(artwork);
+
+                const statusClass = `status-${artwork.status}`;
+                const statusText = {
+                    'available': 'Доступна',
+                    'sold': 'Продана',
+                    'order': 'На замовлення'
+                }[artwork.status];
+
+                artworkEl.innerHTML = `
+                    <img src="${artwork.image}" alt="${artwork.title}">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">${artwork.title}</h3>
+                        <div class="artwork-details">${artwork.technique}, ${artwork.year}</div>
+                        <div class="artwork-status ${statusClass}">${statusText}</div>
+                    </div>
+                `;
+
+                gallery.appendChild(artworkEl);
+            });
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderGallery();
+            });
+        });
+
+        // Modal functionality
+        function openModal(artwork) {
+            const modal = document.getElementById('artworkModal');
+            document.getElementById('modalImage').src = artwork.image;
+            document.getElementById('modalTitle').textContent = artwork.title;
+            document.getElementById('modalTechnique').textContent = artwork.technique;
+            document.getElementById('modalSize').textContent = artwork.size;
+            document.getElementById('modalYear').textContent = artwork.year;
+            document.getElementById('modalDescription').textContent = artwork.description;
+            
+            const statusText = {
+                'available': 'Доступна',
+                'sold': 'Продана',
+                'order': 'На замовлення'
+            }[artwork.status];
+            document.getElementById('modalStatus').textContent = statusText;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        document.querySelector('.modal-close').onclick = function() {
+            document.getElementById('artworkModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('artworkModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Admin panel toggle
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('open');
+        }
+
+        // Add new artwork
+        document.getElementById('addArtworkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newArtwork = {
+                id: artworks.length + 1,
+                title: document.getElementById('artworkTitle').value,
+                description: document.getElementById('artworkDescription').value,
+                category: document.getElementById('artworkCategory').value,
+                technique: document.getElementById('artworkTechnique').value,
+                size: document.getElementById('artworkSize').value,
+                year: parseInt(document.getElementById('artworkYear').value),
+                status: document.getElementById('artworkStatus').value,
+                image: document.getElementById('artworkImage').value
+            };
+
+            artworks.push(newArtwork);
+            renderGallery();
+            
+            // Reset form
+            this.reset();
+            alert('Роботу успішно додано!');
+        });
+
+        // Initial render
+        renderGallery();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
