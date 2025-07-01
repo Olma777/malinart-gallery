@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MalinArt Gallery</title>
+    <title>MalinArt Gallery - Сучасне мистецтво від Даниїли</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="MalinArt Gallery - авторські картини Даниїли. Інтер'єрні картини, квіти, абстракція. Купити оригінальні картини в Україні.">
+    <meta name="keywords" content="картини, мистецтво, галерея, купити картину, абстракція, квіти, інтер'єр, MalinArt, Даниїла">
+    <meta name="author" content="MalinArt">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="MalinArt Gallery - Сучасне мистецтво">
+    <meta property="og:description" content="Авторські картини від MalinArt. Унікальні роботи для вашого інтер'єру.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/aoxfNgq.jpg">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,6 +37,17 @@
             letter-spacing: 0.02em;
         }
 
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         /* Header */
         header {
             background: rgba(255, 255, 255, 0.98);
@@ -34,6 +56,12 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .container {
@@ -46,6 +74,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
 
         .logo {
@@ -93,11 +122,114 @@
             width: 100%;
         }
 
+        /* Mobile menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 24px;
+            position: relative;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #2a2a2a;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            display: flex;
+            gap: 10px;
+            z-index: 101;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid #d0d0d0;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #5a5a5a;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: #2a2a2a;
+            color: white;
+            border-color: #2a2a2a;
+        }
+
+        .lang-btn:hover:not(.active) {
+            border-color: #7a7a7a;
+            color: #2a2a2a;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 40px 0 20px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 0.5px solid #d0d0d0;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #7a7a7a;
+        }
+
+        .search-input::placeholder {
+            color: #a0a0a0;
+        }
+
         /* About Section */
         .about-section {
             background: white;
             padding: 100px 0;
             display: none;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
         }
 
         .about-content {
@@ -127,6 +259,9 @@
         .filter-container {
             padding: 80px 0 60px;
             text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            animation-delay: 0.4s;
         }
 
         .filter-buttons {
@@ -171,7 +306,16 @@
         .artwork {
             cursor: pointer;
             transition: transform 0.5s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
         }
+
+        .artwork:nth-child(1) { animation-delay: 0.1s; }
+        .artwork:nth-child(2) { animation-delay: 0.2s; }
+        .artwork:nth-child(3) { animation-delay: 0.3s; }
+        .artwork:nth-child(4) { animation-delay: 0.4s; }
+        .artwork:nth-child(5) { animation-delay: 0.5s; }
+        .artwork:nth-child(6) { animation-delay: 0.6s; }
 
         .artwork:hover {
             transform: translateY(-3px);
@@ -228,6 +372,14 @@
             color: #8a7a6a;
         }
 
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 60px 0;
+            color: #7a7a7a;
+            font-size: 16px;
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -239,6 +391,12 @@
             background: rgba(255, 255, 255, 0.97);
             z-index: 1000;
             overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
         }
 
         .modal-content {
@@ -247,6 +405,12 @@
             margin: 50px auto;
             background: white;
             box-shadow: 0 20px 80px rgba(0, 0, 0, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
         }
 
         .modal-close {
@@ -419,6 +583,17 @@
             padding: 25px;
         }
 
+        .admin-section {
+            margin-bottom: 30px;
+        }
+
+        .admin-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #2a2a2a;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -479,6 +654,23 @@
             background: #4a4a4a;
         }
 
+        .btn-danger {
+            background: #a67a7a;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        .btn-danger:hover {
+            background: #8a5a5a;
+        }
+
         .admin-toggle {
             position: fixed;
             bottom: 25px;
@@ -503,14 +695,71 @@
             transform: scale(1.05);
         }
 
+        /* Artwork List in Admin */
+        .artwork-list {
+            margin-top: 20px;
+        }
+
+        .artwork-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 0.5px solid #e0e0e0;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+
+        .artwork-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+
+        .artwork-item-info {
+            flex: 1;
+        }
+
+        .artwork-item-title {
+            font-weight: 400;
+            color: #2a2a2a;
+            margin-bottom: 5px;
+        }
+
+        .artwork-item-details {
+            font-size: 12px;
+            color: #7a7a7a;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 0 20px;
             }
 
+            .lang-switcher {
+                right: 60px;
+            }
+
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                gap: 20px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
             }
 
             .gallery {
@@ -550,39 +799,85 @@
     </style>
 </head>
 <body>
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="uk">UA</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
     <!-- Header -->
     <header>
         <nav class="container">
             <div class="logo">MALINART</div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <ul class="nav-links">
-                <li><a href="#gallery" class="active">Галерея</a></li>
-                <li><a href="#about">Про художницю</a></li>
-                <li><a href="#contact">Контакти</a></li>
+                <li><a href="#gallery" class="active" data-uk="Галерея" data-en="Gallery">Галерея</a></li>
+                <li><a href="#about" data-uk="Про художницю" data-en="About Artist">Про художницю</a></li>
+                <li><a href="#contact" data-uk="Контакти" data-en="Contact">Контакти</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Filter Section -->
-    <div class="container">
-        <div class="filter-container">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">Всі роботи</button>
-                <button class="filter-btn" data-filter="interior">Інтерʼєрні картини</button>
-                <button class="filter-btn" data-filter="flowers">Квіти</button>
-                <button class="filter-btn" data-filter="abstract">Абстракція</button>
+    <!-- Main Content Container -->
+    <div id="main-content">
+        <!-- Search Section -->
+        <div class="container">
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="Пошук за назвою, технікою або роком..." 
+                           data-uk="Пошук за назвою, технікою або роком..." 
+                           data-en="Search by title, technique or year...">
+                </div>
             </div>
         </div>
 
-        <!-- Gallery Grid -->
-        <div class="gallery" id="gallery"></div>
+        <!-- Filter Section -->
+        <div class="container">
+            <div class="filter-container">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all" data-uk="Всі роботи" data-en="All Works">Всі роботи</button>
+                    <button class="filter-btn" data-filter="interior" data-uk="Інтерʼєрні картини" data-en="Interior Paintings">Інтерʼєрні картини</button>
+                    <button class="filter-btn" data-filter="flowers" data-uk="Квіти" data-en="Flowers">Квіти</button>
+                    <button class="filter-btn" data-filter="abstract" data-uk="Абстракція" data-en="Abstract">Абстракція</button>
+                </div>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="gallery" id="gallery"></div>
+            <div class="no-results" id="noResults" style="display: none;">
+                <p data-uk="Нічого не знайдено за вашим запитом" data-en="No results found for your search">Нічого не знайдено за вашим запитом</p>
+            </div>
+        </div>
     </div>
 
     <!-- About Section (Hidden by default) -->
     <section class="about-section" id="about">
         <div class="container">
             <div class="about-content">
-                <h2>Про художницю</h2>
-                <div class="about-text">Мене звати Даниїла, у мистецтві — MalinArt.
+                <h2 data-uk="Про художницю" data-en="About the Artist">Про художницю</h2>
+                <div class="about-text" data-uk="Мене звати Даниїла, у мистецтві — MalinArt.
+Я створюю картини, що народжуються з тиші між думками, з шепоту незримого, з відлуння снів, які не мають початку й кінця. Це не просто зображення — це стани, що приходять крізь мене, як світло крізь вітраж.
+
+Я малюю для тих, хто вміє бачити серцем. Для тих, хто шукає не сюжет — а відчуття.
+Моє мистецтво — це не втеча від реальності, а дотик до глибшої правди, що ховається за її завісою.
+
+У цій галереї ви не знайдете галасу, акцій чи реклами.
+Тут — лише фарби, тиша й душа.
+Ласкаво прошу до простору, де образи говорять замість слів." 
+data-en="My name is Danyila, in art — MalinArt.
+I create paintings born from the silence between thoughts, from the whisper of the unseen, from the echo of dreams that have no beginning or end. These are not just images — they are states that come through me like light through stained glass.
+
+I paint for those who can see with their hearts. For those who seek not a plot — but a feeling.
+My art is not an escape from reality, but a touch of a deeper truth hidden behind its veil.
+
+In this gallery you will not find noise, promotions or advertising.
+Here — only colors, silence and soul.
+Welcome to a space where images speak instead of words.">Мене звати Даниїла, у мистецтві — MalinArt.
 Я створюю картини, що народжуються з тиші між думками, з шепоту незримого, з відлуння снів, які не мають початку й кінця. Це не просто зображення — це стани, що приходять крізь мене, як світло крізь вітраж.
 
 Я малюю для тих, хто вміє бачити серцем. Для тих, хто шукає не сюжет — а відчуття.
@@ -598,8 +893,8 @@
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="container">
-            <h2>Зв'яжіться зі мною</h2>
-            <p>Для замовлення робіт або питань про наявні картини</p>
+            <h2 data-uk="Зв'яжіться зі мною" data-en="Contact Me">Зв'яжіться зі мною</h2>
+            <p data-uk="Для замовлення робіт або питань про наявні картини" data-en="For ordering works or questions about available paintings">Для замовлення робіт або питань про наявні картини</p>
             <div class="contact-links">
                 <a href="https://t.me/oksmal99" class="contact-link">Telegram</a>
                 <a href="https://instagram.com/malinart_studio" class="contact-link">Instagram</a>
@@ -616,19 +911,19 @@
                 <h2 class="modal-title" id="modalTitle"></h2>
                 <div class="modal-details">
                     <div class="detail-item">
-                        <div class="detail-label">Техніка</div>
+                        <div class="detail-label" data-uk="Техніка" data-en="Technique">Техніка</div>
                         <div class="detail-value" id="modalTechnique"></div>
                     </div>
                     <div class="detail-item">
-                        <div class="detail-label">Розмір</div>
+                        <div class="detail-label" data-uk="Розмір" data-en="Size">Розмір</div>
                         <div class="detail-value" id="modalSize"></div>
                     </div>
                     <div class="detail-item">
-                        <div class="detail-label">Рік</div>
+                        <div class="detail-label" data-uk="Рік" data-en="Year">Рік</div>
                         <div class="detail-value" id="modalYear"></div>
                     </div>
                     <div class="detail-item">
-                        <div class="detail-label">Статус</div>
+                        <div class="detail-label" data-uk="Статус" data-en="Status">Статус</div>
                         <div class="detail-value" id="modalStatus"></div>
                     </div>
                 </div>
@@ -690,6 +985,11 @@
                     <button type="submit" class="btn-primary">Додати роботу</button>
                 </form>
             </div>
+            
+            <div class="admin-section">
+                <h3>Керування роботами</h3>
+                <div class="artwork-list" id="adminArtworkList"></div>
+            </div>
         </div>
     </div>
 
@@ -697,11 +997,12 @@
     <button class="admin-toggle" onclick="toggleAdmin()">⚙</button>
 
     <script>
-        // Artwork data
-        let artworks = [
+        // Load artworks from localStorage or use default
+        let defaultArtworks = [
             {
                 id: 1,
                 title: "Жінка серед калл",
+                titleEn: "Woman Among Calla Lilies",
                 description: `Ця картина — про жіночність, що мовчить голосніше за слова.
 Калли — квіти чистоти, смерті й відродження — здіймаються, ніби білі хмари, що оберігають спину героїні.
 Її поза — вразлива й сильна водночас, як молитва, сказана про себе.
@@ -713,50 +1014,408 @@
 Це не просто натюрморт.
 Це стан.
 Це жінка, що повернулася до світу спиною, щоб повернутись до себе обличчям.`,
+                descriptionEn: `This painting is about femininity that speaks louder than words.
+Calla lilies — flowers of purity, death and rebirth — rise like white clouds protecting the heroine's back.
+Her pose is vulnerable and strong at the same time, like a prayer said to oneself.
+
+The yellow center of each flower is like a spark of life in silence.
+Bananas below — earthly, juicy, sensual.
+But she is between them and the higher. She is a bridge.
+
+This is not just a still life.
+This is a state.
+This is a woman who turned her back on the world to turn her face to herself.`,
                 category: "flowers",
                 technique: "Акрил на полотні",
+                techniqueEn: "Acrylic on canvas",
                 size: "60x90 см",
                 year: 2025,
                 status: "available",
                 image: "https://i.imgur.com/aoxfNgq.jpg"
+            },
+            {
+                id: 2,
+                title: "Танець світла",
+                titleEn: "Dance of Light",
+                description: `Абстракція, що народилася з ранкового променя.
+Кольори переплітаються, як думки на межі сну та пробудження.
+Золоті відблиски — це спогади про щасливі моменти.
+Сині глибини — океан підсвідомості.
+
+Ця робота не має початку і кінця.
+Вона тече, змінюється з кожним поглядом.
+Знайдіть у ній свою історію.`,
+                descriptionEn: `An abstraction born from a morning ray.
+Colors intertwine like thoughts on the edge of sleep and awakening.
+Golden reflections are memories of happy moments.
+Blue depths are the ocean of the subconscious.
+
+This work has no beginning or end.
+It flows, changes with every look.
+Find your story in it.`,
+                category: "abstract",
+                technique: "Акрил, змішана техніка",
+                techniqueEn: "Acrylic, mixed media",
+                size: "80x80 см",
+                year: 2024,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1549887534-1541e9326642?w=800"
+            },
+            {
+                id: 3,
+                title: "Маки на вітрі",
+                titleEn: "Poppies in the Wind",
+                description: `Червоні маки — символ пам'яті та життя.
+Вони танцюють на вітрі, неначе полум'я свічок.
+Кожна пелюстка — це історія, яку вітер несе далі.
+
+Темне тло підкреслює крихкість і силу квітів.
+Вони світяться зсередини, випромінюючи тепло.
+Ця картина — про те, що красу не можна втримати, але можна відчути.`,
+                descriptionEn: `Red poppies are a symbol of memory and life.
+They dance in the wind like candle flames.
+Each petal is a story that the wind carries on.
+
+The dark background emphasizes the fragility and strength of the flowers.
+They glow from within, radiating warmth.
+This painting is about how beauty cannot be held, but can be felt.`,
+                category: "flowers",
+                technique: "Олія на полотні",
+                techniqueEn: "Oil on canvas",
+                size: "70x50 см",
+                year: 2024,
+                status: "sold",
+                image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=800"
+            },
+            {
+                id: 4,
+                title: "Геометрія тиші",
+                titleEn: "Geometry of Silence",
+                description: `Мінімалістична композиція про внутрішній спокій.
+Прості форми створюють складні емоції.
+Баланс між порожнечею та наповненістю.
+
+Ця робота для тих, хто цінує тишу.
+Для тих, хто знаходить красу в простоті.
+Медитація в фарбах.`,
+                descriptionEn: `A minimalist composition about inner peace.
+Simple forms create complex emotions.
+Balance between emptiness and fullness.
+
+This work is for those who appreciate silence.
+For those who find beauty in simplicity.
+Meditation in colors.`,
+                category: "interior",
+                technique: "Акрил на полотні",
+                techniqueEn: "Acrylic on canvas",
+                size: "100x70 см",
+                year: 2025,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1584448141569-69f342da535c?w=800"
+            },
+            {
+                id: 5,
+                title: "Ірис в тумані",
+                titleEn: "Iris in the Fog",
+                description: `Самотній ірис проступає крізь ранковий туман.
+Фіолетові пелюстки — як королівська мантія.
+Навколо — м'яка невизначеність, що огортає квітку таємницею.
+
+Це про красу, що не кричить, а шепоче.
+Про силу бути собою в будь-якому оточенні.
+Про елегантність самотності.`,
+                descriptionEn: `A lonely iris emerges through the morning fog.
+Purple petals like a royal mantle.
+Around — soft uncertainty that wraps the flower in mystery.
+
+This is about beauty that doesn't shout, but whispers.
+About the strength to be yourself in any environment.
+About the elegance of solitude.`,
+                category: "flowers",
+                technique: "Акварель, акрил",
+                techniqueEn: "Watercolor, acrylic",
+                size: "40x60 см",
+                year: 2024,
+                status: "order",
+                image: "https://images.unsplash.com/photo-1567696153798-9111f9cd3d0d?w=800"
+            },
+            {
+                id: 6,
+                title: "Космічна симфонія",
+                titleEn: "Cosmic Symphony",
+                description: `Абстрактна подорож у глибини всесвіту та душі.
+Кольори виграють, як зірки в нічному небі.
+Форми переплітаються в космічному танці.
+
+Кожен бачить тут своє:
+Хтось — галактики та туманності.
+Хтось — емоції та почуття.
+Хтось — музику кольору.`,
+                descriptionEn: `An abstract journey into the depths of the universe and soul.
+Colors play like stars in the night sky.
+Forms intertwine in a cosmic dance.
+
+Everyone sees their own here:
+Some — galaxies and nebulae.
+Some — emotions and feelings.
+Some — the music of color.`,
+                category: "abstract",
+                technique: "Змішана техніка",
+                techniqueEn: "Mixed media",
+                size: "90x120 см",
+                year: 2025,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1574482515175-5c1b63b47720?w=800"
+            },
+            {
+                id: 7,
+                title: "Мінімал №3",
+                titleEn: "Minimal #3",
+                description: `Чистота форми. Ясність думки.
+Три лінії, що створюють нескінченність.
+Простір, що дихає.
+
+Для сучасних інтер'єрів.
+Для тих, хто втомився від шуму.
+Для любителів естетики дзен.`,
+                descriptionEn: `Purity of form. Clarity of thought.
+Three lines creating infinity.
+Space that breathes.
+
+For modern interiors.
+For those tired of noise.
+For lovers of Zen aesthetics.`,
+                category: "interior",
+                technique: "Акрил на полотні",
+                techniqueEn: "Acrylic on canvas",
+                size: "60x60 см",
+                year: 2024,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
+            },
+            {
+                id: 8,
+                title: "Соняшники в серпні",
+                titleEn: "Sunflowers in August",
+                description: `Літнє сонце, втілене в квітах.
+Соняшники тягнуться до світла, як ми тягнемося до щастя.
+Жовтогарячі пелюстки випромінюють тепло.
+
+Ця картина наповнить ваш дім сонцем.
+Навіть в найхолодніший зимовий день.
+Бо сонце живе всередині нас.`,
+                descriptionEn: `Summer sun embodied in flowers.
+Sunflowers reach for the light as we reach for happiness.
+Orange-yellow petals radiate warmth.
+
+This painting will fill your home with sunshine.
+Even on the coldest winter day.
+Because the sun lives inside us.`,
+                category: "flowers",
+                technique: "Олія на полотні",
+                techniqueEn: "Oil on canvas",
+                size: "80x100 см",
+                year: 2024,
+                status: "sold",
+                image: "https://images.unsplash.com/photo-1569745358610-b01866003860?w=800"
+            },
+            {
+                id: 9,
+                title: "Текстури часу",
+                titleEn: "Textures of Time",
+                description: `Шари фарби, як шари пам'яті.
+Кожен мазок — це момент, що минув.
+Разом вони створюють історію.
+
+Тактильна робота, яку хочеться доторкнутися.
+Відчути текстуру часу під пальцями.
+Зрозуміти, що минуле живе в теперішньому.`,
+                descriptionEn: `Layers of paint like layers of memory.
+Each stroke is a moment that has passed.
+Together they create a story.
+
+A tactile work that you want to touch.
+Feel the texture of time under your fingers.
+Understand that the past lives in the present.`,
+                category: "interior",
+                technique: "Акрил, текстурна паста",
+                techniqueEn: "Acrylic, texture paste",
+                size: "70x90 см",
+                year: 2025,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1577083552792-a0d461cb1dd6?w=800"
+            },
+            {
+                id: 10,
+                title: "Рожева мрія",
+                titleEn: "Pink Dream",
+                description: `Ніжність, втілена в абстрактних формах.
+Рожеві відтінки переливаються, як перламутр.
+М'які переходи заспокоюють погляд.
+
+Ця робота про любов до себе.
+Про прийняття своєї вразливості.
+Про силу бути ніжною.`,
+                descriptionEn: `Tenderness embodied in abstract forms.
+Pink shades shimmer like mother of pearl.
+Soft transitions soothe the eye.
+
+This work is about self-love.
+About accepting your vulnerability.
+About the strength to be gentle.`,
+                category: "abstract",
+                technique: "Акрил, лесування",
+                techniqueEn: "Acrylic, glazing",
+                size: "50x50 см",
+                year: 2024,
+                status: "available",
+                image: "https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800"
             }
         ];
 
-        // Current filter
+        // Load from localStorage or use defaults
+        let artworks = JSON.parse(localStorage.getItem('malinart_artworks')) || defaultArtworks;
+        
+        // Save to localStorage function
+        function saveArtworks() {
+            localStorage.setItem('malinart_artworks', JSON.stringify(artworks));
+        }
+
+        // Current filter and language
         let currentFilter = 'all';
+        let currentLang = 'uk';
+        let searchQuery = '';
+
+        // Language translations
+        const translations = {
+            uk: {
+                available: 'Доступна',
+                sold: 'Продана',
+                order: 'На замовлення',
+                noResults: 'Нічого не знайдено за вашим запитом'
+            },
+            en: {
+                available: 'Available',
+                sold: 'Sold',
+                order: 'Made to order',
+                noResults: 'No results found for your search'
+            }
+        };
+
+        // Change language
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update lang buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            // Update all elements with data-uk and data-en
+            document.querySelectorAll('[data-uk][data-en]').forEach(el => {
+                if (el.tagName === 'INPUT') {
+                    el.placeholder = el.getAttribute(`data-${lang}`);
+                } else {
+                    el.textContent = el.getAttribute(`data-${lang}`);
+                }
+            });
+            
+            // Re-render gallery with new language
+            renderGallery();
+        }
+
+        // Language switcher
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => changeLanguage(btn.dataset.lang));
+        });
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            toggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            renderGallery();
+        });
+
+        // Filter artworks
+        function filterArtworks() {
+            let filtered = artworks;
+            
+            // Apply category filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(art => art.category === currentFilter);
+            }
+            
+            // Apply search filter
+            if (searchQuery) {
+                filtered = filtered.filter(art => {
+                    const title = (currentLang === 'uk' ? art.title : art.titleEn).toLowerCase();
+                    const technique = (currentLang === 'uk' ? art.technique : art.techniqueEn).toLowerCase();
+                    const year = art.year.toString();
+                    
+                    return title.includes(searchQuery) || 
+                           technique.includes(searchQuery) || 
+                           year.includes(searchQuery);
+                });
+            }
+            
+            return filtered;
+        }
 
         // Render gallery
         function renderGallery() {
             const gallery = document.getElementById('gallery');
+            const noResults = document.getElementById('noResults');
             gallery.innerHTML = '';
 
-            const filteredArtworks = currentFilter === 'all' 
-                ? artworks 
-                : artworks.filter(art => art.category === currentFilter);
+            const filteredArtworks = filterArtworks();
+            
+            if (filteredArtworks.length === 0) {
+                noResults.style.display = 'block';
+                noResults.querySelector('p').textContent = translations[currentLang].noResults;
+            } else {
+                noResults.style.display = 'none';
+                
+                filteredArtworks.forEach((artwork, index) => {
+                    const artworkEl = document.createElement('div');
+                    artworkEl.className = 'artwork';
+                    artworkEl.onclick = () => openModal(artwork);
+                    artworkEl.style.animationDelay = `${index * 0.1}s`;
 
-            filteredArtworks.forEach(artwork => {
-                const artworkEl = document.createElement('div');
-                artworkEl.className = 'artwork';
-                artworkEl.onclick = () => openModal(artwork);
+                    const statusClass = `status-${artwork.status}`;
+                    const statusText = translations[currentLang][artwork.status];
+                    const title = currentLang === 'uk' ? artwork.title : artwork.titleEn;
+                    const technique = currentLang === 'uk' ? artwork.technique : artwork.techniqueEn;
 
-                const statusClass = `status-${artwork.status}`;
-                const statusText = {
-                    'available': 'Доступна',
-                    'sold': 'Продана',
-                    'order': 'На замовлення'
-                }[artwork.status];
+                    artworkEl.innerHTML = `
+                        <img src="${artwork.image}" alt="${title}" loading="lazy">
+                        <div class="artwork-info">
+                            <h3 class="artwork-title">${title}</h3>
+                            <div class="artwork-details">${technique}, ${artwork.year}</div>
+                            <div class="artwork-status ${statusClass}">${statusText}</div>
+                        </div>
+                    `;
 
-                artworkEl.innerHTML = `
-                    <img src="${artwork.image}" alt="${artwork.title}">
-                    <div class="artwork-info">
-                        <h3 class="artwork-title">${artwork.title}</h3>
-                        <div class="artwork-details">${artwork.technique}, ${artwork.year}</div>
-                        <div class="artwork-status ${statusClass}">${statusText}</div>
-                    </div>
-                `;
-
-                gallery.appendChild(artworkEl);
-            });
+                    gallery.appendChild(artworkEl);
+                });
+            }
         }
 
         // Filter functionality
@@ -773,34 +1432,38 @@
         function openModal(artwork) {
             const modal = document.getElementById('artworkModal');
             document.getElementById('modalImage').src = artwork.image;
-            document.getElementById('modalTitle').textContent = artwork.title;
-            document.getElementById('modalTechnique').textContent = artwork.technique;
+            document.getElementById('modalTitle').textContent = currentLang === 'uk' ? artwork.title : artwork.titleEn;
+            document.getElementById('modalTechnique').textContent = currentLang === 'uk' ? artwork.technique : artwork.techniqueEn;
             document.getElementById('modalSize').textContent = artwork.size;
             document.getElementById('modalYear').textContent = artwork.year;
-            document.getElementById('modalDescription').textContent = artwork.description;
+            document.getElementById('modalDescription').textContent = currentLang === 'uk' ? artwork.description : artwork.descriptionEn;
             
-            const statusText = {
-                'available': 'Доступна',
-                'sold': 'Продана',
-                'order': 'На замовлення'
-            }[artwork.status];
+            const statusText = translations[currentLang][artwork.status];
             document.getElementById('modalStatus').textContent = statusText;
             
             modal.style.display = 'block';
+            setTimeout(() => modal.classList.add('show'), 10);
             document.body.style.overflow = 'hidden';
         }
 
         // Close modal
         document.querySelector('.modal-close').onclick = function() {
-            document.getElementById('artworkModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            const modal = document.getElementById('artworkModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
         }
 
         window.onclick = function(event) {
             const modal = document.getElementById('artworkModal');
             if (event.target == modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }, 300);
             }
         }
 
@@ -808,6 +1471,43 @@
         function toggleAdmin() {
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('open');
+            if (panel.classList.contains('open')) {
+                renderAdminArtworkList();
+            }
+        }
+
+        // Render admin artwork list
+        function renderAdminArtworkList() {
+            const list = document.getElementById('adminArtworkList');
+            list.innerHTML = '';
+            
+            artworks.forEach(artwork => {
+                const item = document.createElement('div');
+                item.className = 'artwork-item';
+                
+                const statusText = translations.uk[artwork.status];
+                
+                item.innerHTML = `
+                    <img src="${artwork.image}" alt="${artwork.title}">
+                    <div class="artwork-item-info">
+                        <div class="artwork-item-title">${artwork.title}</div>
+                        <div class="artwork-item-details">${artwork.technique}, ${artwork.year} - ${statusText}</div>
+                    </div>
+                    <button class="btn-danger" onclick="deleteArtwork(${artwork.id})">Видалити</button>
+                `;
+                
+                list.appendChild(item);
+            });
+        }
+
+        // Delete artwork
+        function deleteArtwork(id) {
+            if (confirm('Ви впевнені, що хочете видалити цю роботу?')) {
+                artworks = artworks.filter(art => art.id !== id);
+                saveArtworks();
+                renderGallery();
+                renderAdminArtworkList();
+            }
         }
 
         // Add new artwork
@@ -815,11 +1515,14 @@
             e.preventDefault();
             
             const newArtwork = {
-                id: artworks.length + 1,
+                id: Date.now(), // Use timestamp as unique ID
                 title: document.getElementById('artworkTitle').value,
+                titleEn: document.getElementById('artworkTitle').value, // Default to same as Ukrainian
                 description: document.getElementById('artworkDescription').value,
+                descriptionEn: document.getElementById('artworkDescription').value, // Default to same as Ukrainian
                 category: document.getElementById('artworkCategory').value,
                 technique: document.getElementById('artworkTechnique').value,
+                techniqueEn: document.getElementById('artworkTechnique').value, // Default to same as Ukrainian
                 size: document.getElementById('artworkSize').value,
                 year: parseInt(document.getElementById('artworkYear').value),
                 status: document.getElementById('artworkStatus').value,
@@ -827,40 +1530,74 @@
             };
 
             artworks.push(newArtwork);
+            saveArtworks(); // Save to localStorage
             renderGallery();
+            renderAdminArtworkList();
             
             // Reset form
             this.reset();
             alert('Роботу успішно додано!');
         });
 
-        // Initial render
-        renderGallery();
-
-        // Smooth scroll and section navigation
+        // Navigation and section switching
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
-                const target = document.querySelector(targetId);
                 
-                // Hide all sections first
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Hide/show sections
                 document.getElementById('about').style.display = 'none';
-                document.querySelector('.filter-container').parentElement.style.display = 'block';
+                document.getElementById('main-content').style.display = 'block';
+                document.querySelector('.contact').style.display = 'block';
                 
-                // Show the target section
                 if (targetId === '#about') {
                     document.getElementById('about').style.display = 'block';
-                    document.querySelector('.filter-container').parentElement.style.display = 'none';
+                    document.getElementById('main-content').style.display = 'none';
+                    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
                 } else if (targetId === '#gallery') {
-                    document.querySelector('.filter-container').parentElement.style.display = 'block';
+                    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+                } else if (targetId === '#contact') {
+                    document.querySelector('.contact').scrollIntoView({ behavior: 'smooth' });
                 }
                 
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
+                // Close mobile menu
+                document.querySelector('.mobile-menu-toggle').classList.remove('active');
+                document.querySelector('.nav-links').classList.remove('active');
             });
         });
+
+        // Initial render
+        renderGallery();
+
+        // Structured data for SEO
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "ArtGallery",
+            "name": "MalinArt Gallery",
+            "description": "Авторські картини від MalinArt. Інтер'єрні картини, квіти, абстракція.",
+            "url": window.location.href,
+            "image": "https://i.imgur.com/aoxfNgq.jpg",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "UA"
+            },
+            "creator": {
+                "@type": "Person",
+                "name": "Даниїла (MalinArt)",
+                "description": "Художниця, що створює картини з тиші між думками"
+            }
+        };
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(structuredData);
+        document.head.appendChild(script);
     </script>
 </body>
 </html>
