@@ -7,7 +7,7 @@
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="MalinArt Gallery - авторські картини Даниїли. Інтер'єрні картини, квіти, абстракція. Купити оригінальні картини в Україні.">
-    <meta name="keywords" content="картини, мистецтво, галерея, купити картину, абстракція, квіти, інтер'єр, MalinArt, Оксана">
+    <meta name="keywords" content="картини, мистецтво, галерея, купити картину, абстракція, квіти, інтер'єр, MalinArt, Даниїла">
     <meta name="author" content="MalinArt">
     
     <!-- Open Graph -->
@@ -854,7 +854,11 @@
             </div>
 
             <!-- Gallery Grid -->
-            <div class="gallery" id="gallery"></div>
+            <div class="gallery" id="gallery">
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7a7a7a;">
+                    Завантаження...
+                </div>
+            </div>
             <div class="no-results" id="noResults" style="display: none;">
                 <p data-uk="Нічого не знайдено за вашим запитом" data-en="No results found for your search">Нічого не знайдено за вашим запитом</p>
             </div>
@@ -866,7 +870,7 @@
         <div class="container">
             <div class="about-content">
                 <h2 data-uk="Про художницю" data-en="About the Artist">Про художницю</h2>
-                <div class="about-text" data-uk="Мене звати Оксана, у мистецтві — MalinArt.
+                <div class="about-text" data-uk="Мене звати Даниїла, у мистецтві — MalinArt.
 Я створюю картини, що народжуються з тиші між думками, з шепоту незримого, з відлуння снів, які не мають початку й кінця. Це не просто зображення — це стани, що приходять крізь мене, як світло крізь вітраж.
 
 Я малюю для тих, хто вміє бачити серцем. Для тих, хто шукає не сюжет — а відчуття.
@@ -875,7 +879,7 @@
 У цій галереї ви не знайдете галасу, акцій чи реклами.
 Тут — лише фарби, тиша й душа.
 Ласкаво прошу до простору, де образи говорять замість слів." 
-data-en="My name is Oksana, in art — MalinArt.
+data-en="My name is Danyila, in art — MalinArt.
 I create paintings born from the silence between thoughts, from the whisper of the unseen, from the echo of dreams that have no beginning or end. These are not just images — they are states that come through me like light through stained glass.
 
 I paint for those who can see with their hearts. For those who seek not a plot — but a feeling.
@@ -883,7 +887,7 @@ My art is not an escape from reality, but a touch of a deeper truth hidden behin
 
 In this gallery you will not find noise, promotions or advertising.
 Here — only colors, silence and soul.
-Welcome to a space where images speak instead of words.">Мене звати Оксана, у мистецтві — MalinArt.
+Welcome to a space where images speak instead of words.">Мене звати Даниїла, у мистецтві — MalinArt.
 Я створюю картини, що народжуються з тиші між думками, з шепоту незримого, з відлуння снів, які не мають початку й кінця. Це не просто зображення — це стани, що приходять крізь мене, як світло крізь вітраж.
 
 Я малюю для тих, хто вміє бачити серцем. Для тих, хто шукає не сюжет — а відчуття.
@@ -1067,9 +1071,15 @@ Welcome to a space where images speak instead of words.">Мене звати О�
                 if (firebaseArtworks.length > 0) {
                     artworks = firebaseArtworks;
                     renderGallery();
+                } else {
+                    // Use default artworks only if no Firebase data
+                    artworks = defaultArtworks;
+                    renderGallery();
                 }
             } catch (error) {
                 console.log('Using default artworks, Firebase not configured yet');
+                // Keep default artworks if Firebase fails
+                renderGallery();
             }
         }
 
@@ -1089,13 +1099,17 @@ Welcome to a space where images speak instead of words.">Мене звати О�
                         btn.dataset.uk = category.nameUk;
                         btn.dataset.en = category.nameEn;
                         btn.textContent = currentLang === 'uk' ? category.nameUk : category.nameEn;
+                        filterContainer.appendChild(btn);
+                    });
+                    
+                    // Re-attach event listeners
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
                             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                             this.classList.add('active');
                             currentFilter = this.dataset.filter;
                             renderGallery();
                         });
-                        filterContainer.appendChild(btn);
                     });
                 }
             } catch (error) {
@@ -1676,12 +1690,21 @@ About the strength to be gentle.`,
             });
         });
 
-        // Initial render
-        renderGallery();
+        // Initial setup - don't render until Firebase loads
+        // Start with empty artworks
+        artworks = [];
         
         // Try to load from Firebase
-        loadArtworksFromFirebase();
-        loadCategoriesFromFirebase();
+        Promise.all([
+            loadArtworksFromFirebase(),
+            loadCategoriesFromFirebase()
+        ]).then(() => {
+            // If still no artworks after Firebase, use defaults
+            if (artworks.length === 0) {
+                artworks = defaultArtworks;
+                renderGallery();
+            }
+        });
 
         // Structured data for SEO
         const structuredData = {
@@ -1697,7 +1720,7 @@ About the strength to be gentle.`,
             },
             "creator": {
                 "@type": "Person",
-                "name": "Оксана (MalinArt)",
+                "name": "Даниїла (MalinArt)",
                 "description": "Художниця, що створює картини з тиші між думками"
             }
         };
