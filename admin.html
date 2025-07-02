@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MalinArt Admin Panel</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 300;
+            background: #f5f5f5;
+            color: #4a4a4a;
+            line-height: 1.7;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #2a2a2a;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            background: #2a2a2a;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #4a4a4a;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #2a2a2a;
+            border: 1px solid #2a2a2a;
+        }
+
+        .btn-secondary:hover {
+            background: #2a2a2a;
+            color: white;
+        }
+
+        /* Login Form */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .login-container h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Main Container */
+        .admin-container {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            padding: 12px 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .menu-item:hover {
+            color: #2a2a2a;
+        }
+
+        .menu-item.active {
+            color: #2a2a2a;
+            font-weight: 400;
+        }
+
+        /* Content Area */
+        .content {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #5a5a5a;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d0d0d0;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 300;
+            color: #4a4a4a;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #7a7a7a;
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Image Upload */
+        .image-upload {
+            border: 2px dashed #d0d0d0;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .image-upload:hover {
+            border-color: #7a7a7a;
+            background: #fafafa;
+        }
+
+        .image-preview {
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Artworks List */
+        .artworks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .artwork-card {
+            background: #fafafa;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .artwork-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .artwork-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .artwork-card-info {
+            padding: 20px;
+        }
+
+        .artwork-card h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .artwork-card p {
+            font-size: 13px;
+            color: #7a7a7a;
+        }
+
+        .artwork-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-danger {
+            background: #a67a7a;
+        }
+
+        .btn-danger:hover {
+            background: #8a5a5a;
+        }
+
+        /* Categories */
+        .categories-list {
+            margin-top: 20px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #fafafa;
+            margin-bottom: 10px;
+        }
+
+        .category-item h4 {
+            margin: 0;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2a2a2a;
+            color: white;
+            padding: 15px 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.error {
+            background: #a67a7a;
+        }
+
+        .toast.success {
+            background: #6a8a6a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">MALINART ADMIN</div>
+        <div class="header-buttons">
+            <button class="btn btn-secondary" onclick="viewSite()">Переглянути сайт</button>
+            <button class="btn" id="logoutBtn" style="display: none;" onclick="logout()">Вийти</button>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="login-container" id="loginForm">
+        <h2>Вхід в адмін панель</h2>
+        <form onsubmit="login(event)">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Увійти</button>
+        </form>
+    </div>
+
+    <!-- Admin Container -->
+    <div class="admin-container" id="adminPanel">
+        <div class="admin-grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3>Меню</h3>
+                <div class="menu-item active" onclick="showSection('artworks')">Картини</div>
+                <div class="menu-item" onclick="showSection('add-artwork')">Додати картину</div>
+                <div class="menu-item" onclick="showSection('categories')">Категорії</div>
+                <div class="menu-item" onclick="showSection('settings')">Налаштування</div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Artworks Section -->
+                <div id="artworks-section" class="section">
+                    <h2>Всі картини</h2>
+                    <div class="loading" id="artworksLoading">Завантаження...</div>
+                    <div class="artworks-grid" id="artworksList"></div>
+                </div>
+
+                <!-- Add Artwork Section -->
+                <div id="add-artwork-section" class="section" style="display: none;">
+                    <h2>Додати нову картину</h2>
+                    <form onsubmit="addArtwork(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Назва (укр)</label>
+                                <input type="text" id="titleUk" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Назва (eng)</label>
+                                <input type="text" id="titleEn" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Опис (укр)</label>
+                            <textarea id="descriptionUk" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Опис (eng)</label>
+                            <textarea id="descriptionEn" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Категорія</label>
+                                <select id="category" required>
+                                    <option value="">Оберіть категорію</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Статус</label>
+                                <select id="status" required>
+                                    <option value="available">Доступна</option>
+                                    <option value="sold">Продана</option>
+                                    <option value="order">На замовлення</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Техніка (укр)</label>
+                                <input type="text" id="techniqueUk" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Техніка (eng)</label>
+                                <input type="text" id="techniqueEn" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Розмір</label>
+                                <input type="text" id="size" placeholder="60x90 см" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Рік</label>
+                                <input type="number" id="year" value="2025" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>URL зображення</label>
+                            <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" required>
+                            <small style="color: #7a7a7a; display: block; margin-top: 5px;">
+                                Використовуйте Imgur, Cloudinary або інший хостинг зображень
+                            </small>
+                        </div>
+
+                        <button type="submit" class="btn">Додати картину</button>
+                    </form>
+                </div>
+
+                <!-- Categories Section -->
+                <div id="categories-section" class="section" style="display: none;">
+                    <h2>Категорії</h2>
+                    
+                    <form onsubmit="addCategory(event)" style="margin-bottom: 40px;">
+                        <h3>Додати категорію</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Назва (укр)</label>
+                                <input type="text" id="categoryNameUk" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Назва (eng)</label>
+                                <input type="text" id="categoryNameEn" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ID категорії (латиницею)</label>
+                            <input type="text" id="categoryId" pattern="[a-z-]+" required>
+                        </div>
+                        <button type="submit" class="btn">Додати категорію</button>
+                    </form>
+
+                    <div class="categories-list" id="categoriesList"></div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings-section" class="section" style="display: none;">
+                    <h2>Налаштування</h2>
+                    <form onsubmit="updateSettings(event)">
+                        <div class="form-group">
+                            <label>Telegram</label>
+                            <input type="text" id="telegramLink">
+                        </div>
+                        <div class="form-group">
+                            <label>Instagram</label>
+                            <input type="text" id="instagramLink">
+                        </div>
+                        <button type="submit" class="btn">Зберегти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnZycjwbP41UIXsCvTVhe_OUKWmUjaIN4",
+            authDomain: "malinart-gallery.firebaseapp.com",
+            projectId: "malinart-gallery",
+            storageBucket: "malinart-gallery.firebasestorage.app",
+            messagingSenderId: "487046082313",
+            appId: "1:487046082313:web:d0456a48799bc811f0edd8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'block';
+                loadArtworks();
+                loadCategories();
+            } else {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
+            }
+        });
+
+        // Login
+        function login(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    showToast('Успішний вхід', 'success');
+                })
+                .catch((error) => {
+                    showToast('Помилка входу: ' + error.message, 'error');
+                });
+        }
+
+        // Logout
+        function logout() {
+            auth.signOut().then(() => {
+                showToast('Ви вийшли з системи', 'success');
+            }).catch((error) => {
+                showToast('Помилка: ' + error.message, 'error');
+            });
+        }
+
+        // View site
+        function viewSite() {
+            window.open('/', '_blank');
+        }
+
+        // Show section
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(section + '-section').style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // Preview image
+        function previewImage(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').innerHTML = 
+                        `<img src="${e.target.result}" alt="Preview">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Add artwork
+        async function addArtwork(e) {
+            e.preventDefault();
+            
+            showToast('Збереження...', 'success');
+
+            try {
+                // Save to Firestore
+                await db.collection('artworks').add({
+                    title: document.getElementById('titleUk').value,
+                    titleEn: document.getElementById('titleEn').value,
+                    description: document.getElementById('descriptionUk').value,
+                    descriptionEn: document.getElementById('descriptionEn').value,
+                    category: document.getElementById('category').value,
+                    technique: document.getElementById('techniqueUk').value,
+                    techniqueEn: document.getElementById('techniqueEn').value,
+                    size: document.getElementById('size').value,
+                    year: parseInt(document.getElementById('year').value),
+                    status: document.getElementById('status').value,
+                    image: document.getElementById('imageUrl').value,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showToast('Картину успішно додано!', 'success');
+                e.target.reset();
+                loadArtworks();
+                showSection('artworks');
+            } catch (error) {
+                showToast('Помилка: ' + error.message, 'error');
+            }
+        }
+
+        // Load artworks
+        async function loadArtworks() {
+            document.getElementById('artworksLoading').classList.add('show');
+            
+            try {
+                const snapshot = await db.collection('artworks').orderBy('createdAt', 'desc').get();
+                const artworksList = document.getElementById('artworksList');
+                artworksList.innerHTML = '';
+
+                snapshot.forEach((doc) => {
+                    const artwork = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'artwork-card';
+                    card.innerHTML = `
+                        <img src="${artwork.image}" alt="${artwork.title}">
+                        <div class="artwork-card-info">
+                            <h4>${artwork.title}</h4>
+                            <p>${artwork.technique}, ${artwork.year}</p>
+                            <p>${artwork.status === 'available' ? 'Доступна' : artwork.status === 'sold' ? 'Продана' : 'На замовлення'}</p>
+                            <div class="artwork-actions">
+                                <button class="btn btn-small" onclick="editArtwork('${doc.id}')">Редагувати</button>
+                                <button class="btn btn-small btn-danger" onclick="deleteArtwork('${doc.id}')">Видалити</button>
+                            </div>
+                        </div>
+                    `;
+                    artworksList.appendChild(card);
+                });
+            } catch (error) {
+                showToast('Помилка завантаження: ' + error.message, 'error');
+            } finally {
+                document.getElementById('artworksLoading').classList.remove('show');
+            }
+        }
+
+        // Delete artwork
+        async function deleteArtwork(id) {
+            if (confirm('Ви впевнені, що хочете видалити цю картину?')) {
+                try {
+                    await db.collection('artworks').doc(id).delete();
+                    showToast('Картину видалено', 'success');
+                    loadArtworks();
+                } catch (error) {
+                    showToast('Помилка: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Load categories
+        async function loadCategories() {
+            try {
+                const snapshot = await db.collection('categories').get();
+                const categoriesList = document.getElementById('categoriesList');
+                const categorySelect = document.getElementById('category');
+                
+                categoriesList.innerHTML = '';
+                categorySelect.innerHTML = '<option value="">Оберіть категорію</option>';
+
+                snapshot.forEach((doc) => {
+                    const category = doc.data();
+                    
+                    // Add to list
+                    const item = document.createElement('div');
+                    item.className = 'category-item';
+                    item.innerHTML = `
+                        <div>
+                            <h4>${category.nameUk} / ${category.nameEn}</h4>
+                            <p>ID: ${doc.id}</p>
+                        </div>
+                        <button class="btn btn-small btn-danger" onclick="deleteCategory('${doc.id}')">Видалити</button>
+                    `;
+                    categoriesList.appendChild(item);
+
+                    // Add to select
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = category.nameUk;
+                    categorySelect.appendChild(option);
+                });
+            } catch (error) {
+                showToast('Помилка завантаження категорій: ' + error.message, 'error');
+            }
+        }
+
+        // Add category
+        async function addCategory(e) {
+            e.preventDefault();
+            
+            try {
+                const categoryId = document.getElementById('categoryId').value;
+                await db.collection('categories').doc(categoryId).set({
+                    nameUk: document.getElementById('categoryNameUk').value,
+                    nameEn: document.getElementById('categoryNameEn').value
+                });
+
+                showToast('Категорію додано', 'success');
+                e.target.reset();
+                loadCategories();
+            } catch (error) {
+                showToast('Помилка: ' + error.message, 'error');
+            }
+        }
+
+        // Delete category
+        async function deleteCategory(id) {
+            if (confirm('Ви впевнені? Це може вплинути на картини в цій категорії.')) {
+                try {
+                    await db.collection('categories').doc(id).delete();
+                    showToast('Категорію видалено', 'success');
+                    loadCategories();
+                } catch (error) {
+                    showToast('Помилка: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Show toast
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize default categories if needed
+        async function initializeCategories() {
+            const snapshot = await db.collection('categories').get();
+            if (snapshot.empty) {
+                // Add default categories
+                const defaultCategories = [
+                    { id: 'interior', nameUk: 'Інтерʼєрні картини', nameEn: 'Interior Paintings' },
+                    { id: 'flowers', nameUk: 'Квіти', nameEn: 'Flowers' },
+                    { id: 'abstract', nameUk: 'Абстракція', nameEn: 'Abstract' }
+                ];
+
+                for (const cat of defaultCategories) {
+                    await db.collection('categories').doc(cat.id).set({
+                        nameUk: cat.nameUk,
+                        nameEn: cat.nameEn
+                    });
+                }
+            }
+        }
+
+        // Initialize on load
+        initializeCategories();
+    </script>
+</body>
+</html>
