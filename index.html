@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MalinArt Gallery - Сучасне мистецтво від Оксани</title>
+    <title>MalinArt Gallery - Сучасне мистецтво від Даниїли</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="MalinArt Gallery - авторські картини Даниїли. Інтер'єрні картини, квіти, абстракція. Купити оригінальні картини в Україні.">
-    <meta name="keywords" content="картини, мистецтво, галерея, купити картину, абстракція, квіти, інтер'єр, MalinArt, Оксана">
+    <meta name="keywords" content="картини, мистецтво, галерея, купити картину, абстракція, квіти, інтер'єр, MalinArt, Даниїла">
     <meta name="author" content="MalinArt">
     
     <!-- Open Graph -->
@@ -83,6 +83,12 @@
             font-weight: 400;
             letter-spacing: 0.08em;
             color: #2a2a2a;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.7;
         }
 
         .nav-links {
@@ -808,7 +814,7 @@
     <!-- Header -->
     <header>
         <nav class="container">
-            <div class="logo">MALINART</div>
+            <div class="logo" onclick="goToHome()">MALINART</div>
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -860,7 +866,7 @@
         <div class="container">
             <div class="about-content">
                 <h2 data-uk="Про художницю" data-en="About the Artist">Про художницю</h2>
-                <div class="about-text" data-uk="Мене звати Оксана, у мистецтві — MalinArt.
+                <div class="about-text" data-uk="Мене звати Даниїла, у мистецтві — MalinArt.
 Я створюю картини, що народжуються з тиші між думками, з шепоту незримого, з відлуння снів, які не мають початку й кінця. Це не просто зображення — це стани, що приходять крізь мене, як світло крізь вітраж.
 
 Я малюю для тих, хто вміє бачити серцем. Для тих, хто шукає не сюжет — а відчуття.
@@ -996,7 +1002,108 @@ Welcome to a space where images speak instead of words.">Мене звати Д�
     <!-- Admin Toggle Button -->
     <button class="admin-toggle" onclick="toggleAdmin()">⚙</button>
 
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to go to home
+        function goToHome() {
+            // Reset all states
+            currentFilter = 'all';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            
+            // Reset active states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === 'all') btn.classList.add('active');
+            });
+            
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#gallery') link.classList.add('active');
+            });
+            
+            // Show gallery
+            document.getElementById('about').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Render gallery
+            renderGallery();
+        }
+
+        // Load artworks from Firebase
+        async function loadArtworksFromFirebase() {
+            try {
+                const snapshot = await db.collection('artworks').orderBy('createdAt', 'desc').get();
+                const firebaseArtworks = [];
+                
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    firebaseArtworks.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+                
+                if (firebaseArtworks.length > 0) {
+                    artworks = firebaseArtworks;
+                    renderGallery();
+                }
+            } catch (error) {
+                console.log('Using default artworks, Firebase not configured yet');
+            }
+        }
+
+        // Load categories from Firebase
+        async function loadCategoriesFromFirebase() {
+            try {
+                const snapshot = await db.collection('categories').get();
+                if (!snapshot.empty) {
+                    const filterContainer = document.querySelector('.filter-buttons');
+                    filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all" data-uk="Всі роботи" data-en="All Works">Всі роботи</button>';
+                    
+                    snapshot.forEach((doc) => {
+                        const category = doc.data();
+                        const btn = document.createElement('button');
+                        btn.className = 'filter-btn';
+                        btn.dataset.filter = doc.id;
+                        btn.dataset.uk = category.nameUk;
+                        btn.dataset.en = category.nameEn;
+                        btn.textContent = currentLang === 'uk' ? category.nameUk : category.nameEn;
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                            currentFilter = this.dataset.filter;
+                            renderGallery();
+                        });
+                        filterContainer.appendChild(btn);
+                    });
+                }
+            } catch (error) {
+                console.log('Using default categories');
+            }
+        }
+
+        // Original code continues...
         // Load artworks from localStorage or use default
         let defaultArtworks = [
             {
@@ -1469,11 +1576,8 @@ About the strength to be gentle.`,
 
         // Admin panel toggle
         function toggleAdmin() {
-            const panel = document.getElementById('adminPanel');
-            panel.classList.toggle('open');
-            if (panel.classList.contains('open')) {
-                renderAdminArtworkList();
-            }
+            // Redirect to admin panel
+            window.location.href = '/admin.html';
         }
 
         // Render admin artwork list
@@ -1574,6 +1678,10 @@ About the strength to be gentle.`,
 
         // Initial render
         renderGallery();
+        
+        // Try to load from Firebase
+        loadArtworksFromFirebase();
+        loadCategoriesFromFirebase();
 
         // Structured data for SEO
         const structuredData = {
