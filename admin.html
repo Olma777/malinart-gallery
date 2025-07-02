@@ -580,6 +580,12 @@
             // Show selected section
             document.getElementById(section + '-section').style.display = 'block';
             event.target.classList.add('active');
+            
+            // Reset form if going to add artwork
+            if (section === 'add-artwork' && !editingArtworkId) {
+                document.getElementById('addArtworkForm').reset();
+                document.querySelector('#add-artwork-section button[type="submit"]').textContent = 'Додати картину';
+            }
         }
 
         // Preview image
@@ -595,15 +601,14 @@
             }
         }
 
-        // Add artwork
+        // Add or update artwork
         async function addArtwork(e) {
             e.preventDefault();
             
             showToast('Збереження...', 'success');
 
             try {
-                // Save to Firestore
-                await db.collection('artworks').add({
+                const artworkData = {
                     title: document.getElementById('titleUk').value,
                     titleEn: document.getElementById('titleEn').value,
                     description: document.getElementById('descriptionUk').value,
@@ -615,10 +620,22 @@
                     year: parseInt(document.getElementById('year').value),
                     status: document.getElementById('status').value,
                     image: document.getElementById('imageUrl').value,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
 
-                showToast('Картину успішно додано!', 'success');
+                if (editingArtworkId) {
+                    // Update existing artwork
+                    await db.collection('artworks').doc(editingArtworkId).update(artworkData);
+                    showToast('Картину успішно оновлено!', 'success');
+                    editingArtworkId = null;
+                    document.querySelector('#add-artwork-section button[type="submit"]').textContent = 'Додати картину';
+                } else {
+                    // Add new artwork
+                    artworkData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('artworks').add(artworkData);
+                    showToast('Картину успішно додано!', 'success');
+                }
+
                 e.target.reset();
                 loadArtworks();
                 showSection('artworks');
@@ -658,6 +675,40 @@
                 showToast('Помилка завантаження: ' + error.message, 'error');
             } finally {
                 document.getElementById('artworksLoading').classList.remove('show');
+            }
+        }
+
+        // Edit artwork
+        let editingArtworkId = null;
+        
+        async function editArtwork(id) {
+            try {
+                const doc = await db.collection('artworks').doc(id).get();
+                if (doc.exists) {
+                    const artwork = doc.data();
+                    editingArtworkId = id;
+                    
+                    // Fill form with artwork data
+                    document.getElementById('titleUk').value = artwork.title || '';
+                    document.getElementById('titleEn').value = artwork.titleEn || '';
+                    document.getElementById('descriptionUk').value = artwork.description || '';
+                    document.getElementById('descriptionEn').value = artwork.descriptionEn || '';
+                    document.getElementById('category').value = artwork.category || '';
+                    document.getElementById('techniqueUk').value = artwork.technique || '';
+                    document.getElementById('techniqueEn').value = artwork.techniqueEn || '';
+                    document.getElementById('size').value = artwork.size || '';
+                    document.getElementById('year').value = artwork.year || '';
+                    document.getElementById('status').value = artwork.status || '';
+                    document.getElementById('imageUrl').value = artwork.image || '';
+                    
+                    // Change button text
+                    document.querySelector('#add-artwork-section button[type="submit"]').textContent = 'Оновити картину';
+                    
+                    // Show add artwork section
+                    showSection('add-artwork');
+                }
+            } catch (error) {
+                showToast('Помилка: ' + error.message, 'error');
             }
         }
 
